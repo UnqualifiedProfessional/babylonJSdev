@@ -13,4 +13,4 @@ export default function createRunScene(runScene: SceneData) {
   runScene.box.animations.push(createV3scaling(frameRate));
   runScene.box.animations.push(createColorShift(frameRate));
   runScene.scene.beginAnimation(runScene.box, 0, 2 * frameRate, true);
-} 
+}
