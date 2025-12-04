@@ -27,6 +27,7 @@ function createLight(scene: Scene) {
   return light;
 }
 
+
 function createGround(scene: Scene) {
   let ground = MeshBuilder.CreateGround(
     "ground",
@@ -92,6 +93,31 @@ function createBox2(scene: Scene) {
   return box2Aggregate;
 }
 
+function createTorus(scene: Scene) {
+  let torus = MeshBuilder.CreateTorus(
+    "torus",
+    { diameter: 0.7, thickness: 0.6, tessellation: 10 },
+    scene
+  );
+  torus.position.x = -1;
+  torus.position.y = 7;
+  torus.position.z = 1;
+
+  var texture = new StandardMaterial("reflective", scene);
+  texture.ambientTexture = new Texture("./assets/textures/wood.jpg", scene);
+  texture.diffuseColor = new Color3(0.6, 0.6, 1);
+  torus.material = texture;
+
+  var texture = new StandardMaterial("reflective", scene);
+  texture.ambientTexture = new Texture("./assets/textures/wood.jpg", scene);
+  texture.diffuseColor = new Color3(1, 1, 1);
+  torus.material = texture;
+  
+  let torusAggregate = new PhysicsAggregate(torus, PhysicsShapeType.BOX, {mass: 0.2, restitution:0.1, friction:0.4}, scene);
+  torusAggregate.body.setCollisionCallbackEnabled(true);
+  return torusAggregate;
+}
+
 function addAssets(scene: Scene) {
   // add assets here
   const assetsManager = new AssetsManager(scene);
@@ -99,7 +125,7 @@ function addAssets(scene: Scene) {
     "tree1 task",
     "",
     "./assets/nature/gltf/",
-    "CommonTree_1.gltf"
+    "Fern_1.gltf"
   );
   tree1.onSuccess = function (task) {
     const root = task.loadedMeshes[0];
@@ -135,7 +161,7 @@ function addAssets(scene: Scene) {
     "tree1 task",
     "",
     "./assets/nature/gltf/",
-    "CommonTree_3.gltf"
+    "DeadTree_4.gltf"
   );
   tree3.onSuccess = function (task) {
     task.loadedMeshes[0].position = new Vector3(-3, 0, 2);
@@ -158,12 +184,13 @@ function addAssets(scene: Scene) {
 
 export default async function createStartScene(engine: Engine) {
   interface SceneData {
-    scene: Scene;
+    scene: Scene; 
     light?: HemisphericLight;
     ground?: PhysicsAggregate;
     camera?: Camera;
     box1?:PhysicsAggregate;
     box2?:PhysicsAggregate;
+    torus?:PhysicsAggregate;
   }
 
   let that: SceneData = { scene: new Scene(engine) };
@@ -185,6 +212,7 @@ export default async function createStartScene(engine: Engine) {
   that.camera = createArcRotateCamera(that.scene);
   that.box1 = createBox1(that.scene);
   that.box2 = createBox2(that.scene);
+  that.torus = createTorus(that.scene);
   const assetsManager = addAssets(that.scene);
   assetsManager.load();
   return that;

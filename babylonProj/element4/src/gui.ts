@@ -113,35 +113,35 @@ export function gui(scene: Scene): void {
 
   // This rect will be on first row and second column
   const rect1 = new Rectangle();
-  rect1.background = "#76d56e88"; //rgba
+  rect1.background = "#69081d88"; //rgba
   rect1.thickness = 0;
   rect1.addControl(heading1); // rect is a container which can contain other controls
   const rect2 = new Rectangle();
-  rect2.background = "#60955b88";
+  rect2.background = "#69081d88";
   rect2.thickness = 0;
   rect2.addControl(button1);
   const rect3 = new Rectangle();
-  rect3.background = "#76d56e88";
+  rect3.background = "#69081d88";
   rect3.thickness = 0;
   //empty rect
   const rect4 = new Rectangle();
-  rect4.background = "#60955b88";
+  rect4.background = "#69081d88";
   rect4.thickness = 0;
   //empty rect
   const rect5 = new Rectangle();
-  rect5.background = "#76d56e88";
+  rect5.background = "#69081d88";
   rect5.thickness = 0;
   rect5.addControl(text1);
   const rect6 = new Rectangle();
-  rect6.background = "#60955b88";
+  rect6.background = "#69081d88";
   rect6.thickness = 0;
   rect6.addControl(text2);
   const rect7 = new Rectangle();
-  rect7.background = "#76d56e88";
+  rect7.background = "#69081d88";
   rect7.thickness = 0;
   rect7.addControl(text3);
   const rect8 = new Rectangle();
-  rect8.background = "#60955b88";
+  rect8.background = "#69081d88";
   rect8.thickness = 0;
   rect8.addControl(text4);
 

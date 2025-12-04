@@ -84,10 +84,7 @@ function createBox1(scene: Scene) {
   box.position.z = 1;
 
   var texture = new StandardMaterial("reflective", scene);
-  texture.ambientTexture = new Texture(
-    "./assets/textures/reflectivity.png",
-    scene
-  );
+  texture.ambientTexture = new Texture("./assets/textures/lavatile.jpg", scene);
   texture.diffuseColor = new Color3(1, 1, 1);
   box.material = texture;
   return box;
@@ -100,10 +97,33 @@ function createBox2(scene: Scene) {
   box.position.z = 1;
 
   var texture = new StandardMaterial("reflective", scene);
-  texture.ambientTexture = new Texture(
-    "./assets/textures/reflectivity.png",
-    scene
-  );
+  texture.ambientTexture = new Texture("./assets/textures/lavatile.jpg", scene);
+  texture.diffuseColor = new Color3(1, 1, 1);
+  box.material = texture;
+  return box;
+}
+
+function createBox3(scene: Scene) {
+  let box = MeshBuilder.CreateBox("box", { width: 1, height: 1 }, scene);
+  box.position.x = -0.7;
+  box.position.y = 12;
+  box.position.z = -3;
+
+  var texture = new StandardMaterial("reflective", scene);
+  texture.ambientTexture = new Texture("./assets/textures/lavatile.jpg", scene);
+  texture.diffuseColor = new Color3(1, 1, 1);
+  box.material = texture;
+  return box;
+}
+
+function createBox4(scene: Scene) {
+  let box = MeshBuilder.CreateBox("box", { width: 1, height: 1 }, scene);
+  box.position.x = -0.7;
+  box.position.y = 16;
+  box.position.z = 3;
+
+  var texture = new StandardMaterial("reflective", scene);
+  texture.ambientTexture = new Texture("./assets/textures/lavatile.jpg", scene);
   texture.diffuseColor = new Color3(1, 1, 1);
   box.material = texture;
   return box;
@@ -135,6 +155,8 @@ export default function createStartScene(engine: Engine) {
   let camera = createArcRotateCamera(scene);
   let box1 = createBox1(scene);
   let box2 = createBox2(scene);
+  let box3 = createBox3(scene);
+  let box4 = createBox4(scene);
   let player = importMeshA(scene, 0, 0);
   let ground = createGround(scene);
 
@@ -144,6 +166,8 @@ export default function createStartScene(engine: Engine) {
     camera,
     box1,
     box2,
+    box3,
+    box4,
     player,
     ground,
   };

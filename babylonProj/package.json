@@ -7,8 +7,14 @@
     "dev": "vite --host",
     "build": "tsc && vite build",
     "preview": "vite preview --host",
+    "element1build": "vite build element1",
+    "element1preview": "vite preview element1 --host",
+    "element2build": "vite build element2",
+    "element2preview": "vite preview element2 --host",
     "element3build": "vite build element3",
-    "element3preview": "vite preview element3 --host"
+    "element3preview": "vite preview element3 --host",
+    "element4build": "vite build element4",
+    "element4preview": "vite preview element4 --host"
   },
   "devDependencies": {
     "@babylonjs/core": "^8.36.1",
