@@ -116,17 +116,21 @@ function createBox3(scene: Scene) {
   return box;
 }
 
-function createBox4(scene: Scene) {
-  let box = MeshBuilder.CreateBox("box", { width: 1, height: 1 }, scene);
-  box.position.x = -0.7;
-  box.position.y = 16;
-  box.position.z = 3;
+function createOctahedron(scene: Scene) {
+  let octahedron = MeshBuilder.CreatePolyhedron(
+    "oct",
+    { type: 1, size: 0.35 },
+    scene
+  );
+  octahedron.position.x = 0;
+  octahedron.position.y = 2.5;
+  octahedron.position.z = 0;
 
   var texture = new StandardMaterial("reflective", scene);
   texture.ambientTexture = new Texture("./assets/textures/lavatile.jpg", scene);
   texture.diffuseColor = new Color3(1, 1, 1);
-  box.material = texture;
-  return box;
+  octahedron.material = texture;
+  return octahedron;
 }
 
 
@@ -156,7 +160,7 @@ export default function createStartScene(engine: Engine) {
   let box1 = createBox1(scene);
   let box2 = createBox2(scene);
   let box3 = createBox3(scene);
-  let box4 = createBox4(scene);
+  let octahedron = createOctahedron(scene);
   let player = importMeshA(scene, 0, 0);
   let ground = createGround(scene);
 
@@ -167,7 +171,7 @@ export default function createStartScene(engine: Engine) {
     box1,
     box2,
     box3,
-    box4,
+    octahedron,
     player,
     ground,
   };
