@@ -64,6 +64,22 @@ export function collisionDeclaration(runScene : SceneData){
         runScene.scene
       );
       boxAggregate2.body.setCollisionCallbackEnabled(true);
+
+      const boxAggregate3 = new PhysicsAggregate(
+        runScene.box3,
+        PhysicsShapeType.BOX,
+        { mass: 0.5, restitution: 0.3, friction: 0.7 },
+        runScene.scene
+      );
+      boxAggregate3.body.setCollisionCallbackEnabled(true);
+
+      const octahedronAggregate = new PhysicsAggregate(
+        runScene.octahedron,
+        PhysicsShapeType.BOX,
+        { mass: 0.5, restitution: 0.3, friction: 0.7 },
+        runScene.scene
+      );
+      octahedronAggregate.body.setCollisionCallbackEnabled(true);
     
       runScene.player!.then((result: void | ISceneLoaderAsyncResult) => {
         let character: AbstractMesh = result!.meshes[0];

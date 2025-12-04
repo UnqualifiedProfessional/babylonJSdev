@@ -14,7 +14,9 @@
     "element3build": "vite build element3",
     "element3preview": "vite preview element3 --host",
     "element4build": "vite build element4",
-    "element4preview": "vite preview element4 --host"
+    "element4preview": "vite preview element4 --host",
+    "element5build": "vite build element5",
+    "element5preview": "vite preview element5 --host"
   },
   "devDependencies": {
     "@babylonjs/core": "^8.36.1",
