@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build",
-    "preview": "vite preview --host"
+    "preview": "vite preview --host",
+    "element3build": "vite build element3",
+    "element3preview": "vite preview element3 --host"
   },
   "devDependencies": {
     "@babylonjs/core": "^8.36.1",
