@@ -76,7 +76,6 @@ function createSky(scene: Scene) {
 }
 
 function createBox(style: number) {
-  //style 1 small style 2 semi detatched
   const boxMat = new StandardMaterial("boxMat");
   const faceUV: Vector4[] = []; // faces for small house
   if (style == 1) {
@@ -87,49 +86,23 @@ function createBox(style: number) {
     faceUV[3] = new Vector4(0.75, 0, 1.0, 1.0); //left side
     // faceUV[4] would be for bottom but not used
     // faceUV[5] would be for top but not used
-  } else {
-    boxMat.diffuseTexture = new Texture("./assets/textures/semihouse.png");
-    faceUV[0] = new Vector4(0.6, 0.0, 1.0, 1.0); //rear face
-    faceUV[1] = new Vector4(0.0, 0.0, 0.4, 1.0); //front face
-    faceUV[2] = new Vector4(0.4, 0, 0.6, 1.0); //right side
-    faceUV[3] = new Vector4(0.4, 0, 0.6, 1.0); //left side
-    // faceUV[4] would be for bottom but not used
-    // faceUV[5] would be for top but not used
   }
-  
   const box = MeshBuilder.CreateBox("box", {
     width: style,
-    height: 1,
+    height: 3,
     faceUV: faceUV,
     wrap: true,
   });
-  box.position = new Vector3(0, 0.5, 0);
+  box.position = new Vector3(0, 1.5, 0);
   box.scaling = new Vector3(1, 1, 1);
   box.material = boxMat;
   return box;
 }
 
-function createRoof(style: number) {
-  const roof = MeshBuilder.CreateCylinder("roof", {
-    diameter: 1.3,
-    height: 1.2,
-    tessellation: 3,
-  });
-  roof.scaling.x = 0.75;
-  roof.scaling.y = style * 0.85;
-  roof.rotation.z = Math.PI / 2;
-  roof.position.y = 1.22;
-  const roofMat = new StandardMaterial("roofMat");
-  roofMat.diffuseTexture = new Texture("./assets/textures/roof.jpg");
-  roof.material = roofMat;
-  return roof;
-}
-
 function createHouse(scene: Scene, style: number) {
   const box = createBox(style);
-  const roof = createRoof(style);
   const house = Mesh.MergeMeshes(
-    [box, roof],
+    [box],
     true,
     false,
     undefined,
@@ -151,17 +124,13 @@ function createHouses(scene: Scene, style: number) {
     // show 1 large house
     createHouse(scene, 2);
   }
-  if (style == 3) {
-    // show estate
     const houses: Nullable<Mesh>[] = [];
     // first two houses are original meshes
     houses[0] = createHouse(scene, 1);
-    houses[0]!.rotation.y = -Math.PI / 16;
     houses[0]!.position.x = -6.8;
     houses[0]!.position.z = 2.5;
 
     houses[1] = createHouse(scene, 2);
-    houses[1]!.rotation.y = -Math.PI / 16;
     houses[1]!.position.x = -4.5;
     houses[1]!.position.z = 3;
 
@@ -169,21 +138,21 @@ function createHouses(scene: Scene, style: number) {
     const ihouses: InstancedMesh[] = [];
     const places: number[][] = []; //each entry is an array [house type, rotation, x, z]
 
-    places.push([2, -Math.PI / 16, -1.5, 4]);
-    places.push([2, -Math.PI / 3, 1.5, 6]);
-    places.push([2, (15 * Math.PI) / 16, -6.4, -1.5]);
-    places.push([1, (15 * Math.PI) / 16, -4.1, -1]);
-    places.push([2, (15 * Math.PI) / 16, -2.1, -0.5]);
-    places.push([1, (5 * Math.PI) / 4, 0, -1]);
-    places.push([1, Math.PI + Math.PI / 2.5, 0.5, -3]);
-    places.push([2, Math.PI + Math.PI / 2.1, 0.75, -5]);
-    places.push([1, Math.PI + Math.PI / 2.25, 0.75, -7]);
-    places.push([2, Math.PI / 1.9, 4.75, -1]);
-    places.push([1, Math.PI / 1.95, 4.5, -3]);
-    places.push([2, Math.PI / 1.9, 4.75, -5]);
-    places.push([1, Math.PI / 1.9, 4.75, -7]);
-    places.push([2, -Math.PI / 3, 5.25, 2]);
-    places.push([1, -Math.PI / 3, 6, 4]);
+    places.push([2, 0, -1.5, 4]);
+    places.push([2, 0, 1.5, 6]);
+    places.push([2, 0, -6.4, -1.5]);
+    places.push([1, 0, -4.1, -1]);
+    places.push([2, 0, -2.1, -0.5]);
+    places.push([1, 0, 0, -1]);
+    places.push([1, 0, 0.5, -3]);
+    places.push([2, 0, 0.75, -5]);
+    places.push([1, 0, 0.75, -7]);
+    places.push([2, 0, 4.75, -1]);
+    places.push([1, 0, 4.5, -3]);
+    places.push([2, 0, 4.75, -5]);
+    places.push([1, 0, 4.75, -7]);
+    places.push([2, 0, 5.25, 2]);
+    places.push([1, 0, 6, 4]);
 
     for (let i = 0; i < places.length; i++) {
       if (places[i][0] === 1) {
@@ -191,13 +160,12 @@ function createHouses(scene: Scene, style: number) {
       } else {
         ihouses[i] = houses[1]!.createInstance("house" + i);
       }
-      ihouses[i].rotation.y = places[i][1];
       ihouses[i].position.x = places[i][2];
       ihouses[i].position.z = places[i][3];
     }
+
   }
   // nothing returned by this function
-}
 
 function createTrees(scene: Scene) {
   const spriteManagerTrees = new SpriteManager(
