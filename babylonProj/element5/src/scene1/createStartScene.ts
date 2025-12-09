@@ -45,7 +45,7 @@ function createTerrain(scene: Scene) {
 function createGround(scene: Scene) {
   const groundMaterial = new StandardMaterial("groundMaterial");
   groundMaterial.diffuseTexture = new Texture(
-    "./assets/environments/villagegreen.png"
+    "./assets/environments/floor.png"
   );
   groundMaterial.diffuseTexture.hasAlpha = true;
   groundMaterial.backFaceCulling = false;
@@ -84,6 +84,14 @@ function createBox(style: number) {
     faceUV[1] = new Vector4(0.0, 0.0, 0.25, 1.0); //front face
     faceUV[2] = new Vector4(0.25, 0, 0.5, 1.0); //right side
     faceUV[3] = new Vector4(0.75, 0, 1.0, 1.0); //left side
+    // faceUV[4] would be for bottom but not used
+    // faceUV[5] would be for top but not used
+  } else {
+    boxMat.diffuseTexture = new Texture("./assets/textures/semihouse.png");
+    faceUV[0] = new Vector4(0.6, 0.0, 1.0, 1.0); //rear face
+    faceUV[1] = new Vector4(0.0, 0.0, 0.4, 1.0); //front face
+    faceUV[2] = new Vector4(0.4, 0, 0.6, 1.0); //right side
+    faceUV[3] = new Vector4(0.4, 0, 0.6, 1.0); //left side
     // faceUV[4] would be for bottom but not used
     // faceUV[5] would be for top but not used
   }
