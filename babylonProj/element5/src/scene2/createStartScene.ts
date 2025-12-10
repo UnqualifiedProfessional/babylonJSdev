@@ -60,6 +60,10 @@ import {
       { width: 6, height: 6 },
       scene,
     );
+    var texture = new StandardMaterial("reflective", scene);
+    texture.ambientTexture = new Texture("./assets/textures/floor.jpg", scene);
+    texture.diffuseColor = new Color3(1, 1, 1);
+    ground.material = texture;
     return ground;
   }
   
