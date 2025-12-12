@@ -13,7 +13,6 @@ import {
     StandardMaterial,
     Texture,
     Color3,
-    BoxBlock
   } from "@babylonjs/core";
   
   
@@ -66,6 +65,30 @@ import {
   return box;
   }
   
+function createSphere(scene: Scene) {
+  let sphere = MeshBuilder.CreateSphere(
+    "sphere",
+    { diameter: 1, segments: 32 },
+    scene
+  );
+  var texture = new StandardMaterial("reflective", scene);
+  texture.emissiveTexture = new Texture("./assets/textures/wood.jpg", scene);
+  sphere.material = texture;
+
+  sphere.scaling = new Vector3(0.5, 0.5, 0.5)
+  sphere.position = new Vector3(2, 0.25, 2)
+  let sphere1 = sphere.clone("sphere1");
+  sphere1.scaling = new Vector3(0.5, 0.5, 0.5)
+  sphere1.position = new Vector3(2.5, 0.25, 2.2)
+  let sphere2 = sphere.clone("sphere1");
+  sphere2.scaling = new Vector3(0.5, 0.5, 0.5)
+  sphere2.position = new Vector3(2.5, 0.25, 2.7)
+  let sphere3 = sphere.clone("sphere1");
+  sphere3.scaling = new Vector3(0.5, 0.5, 0.5)
+  sphere3.position = new Vector3(3, 0.25, 2)
+  return sphere;
+}
+
   function createLight(scene: Scene) {
     const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
     light.intensity = 0.7;
@@ -116,6 +139,7 @@ import {
     // that.scene.debugLayer.show();
   
     that.box = createBox(that.scene);
+    that.sphere = createSphere(that.scene);
     that.light = createLight(that.scene);
     that.ground = createGround(that.scene);
     that.camera = createArcRotateCamera(that.scene);
