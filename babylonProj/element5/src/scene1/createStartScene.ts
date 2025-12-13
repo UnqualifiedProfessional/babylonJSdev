@@ -13,9 +13,25 @@ import {
     StandardMaterial,
     Texture,
     Color3,
+    CubeTexture
   } from "@babylonjs/core";
   
-  
+  function createSky(scene: Scene) {
+    const skybox = MeshBuilder.CreateBox("skyBox", { size: 150 }, scene);
+    const skyboxMaterial = new StandardMaterial("skyBox", scene);
+    skyboxMaterial.backFaceCulling = false;
+    skyboxMaterial.reflectionTexture = new CubeTexture(
+      "./assets/textures/skybox/skybox",
+      scene
+    );
+    skyboxMaterial.reflectionTexture.coordinatesMode =
+      Texture.SKYBOX_MODE;
+    skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
+    skyboxMaterial.specularColor = new Color3(0, 0, 0);
+    skybox.material = skyboxMaterial;
+    return skybox;
+  }
+
   function createBox(scene: Scene) {
   const box = MeshBuilder.CreateBox(
     "box",
@@ -72,7 +88,7 @@ function createSphere(scene: Scene) {
     scene
   );
   var texture = new StandardMaterial("reflective", scene);
-  texture.emissiveTexture = new Texture("./assets/textures/wood.jpg", scene);
+  texture.emissiveTexture = new Texture("./assets/textures/reflectivity.png", scene);
   sphere.material = texture;
 
   sphere.scaling = new Vector3(0.5, 0.5, 0.5)
@@ -80,10 +96,10 @@ function createSphere(scene: Scene) {
   let sphere1 = sphere.clone("sphere1");
   sphere1.scaling = new Vector3(0.5, 0.5, 0.5)
   sphere1.position = new Vector3(2.5, 0.25, 2.2)
-  let sphere2 = sphere.clone("sphere1");
+  let sphere2 = sphere.clone("sphere2");
   sphere2.scaling = new Vector3(0.5, 0.5, 0.5)
   sphere2.position = new Vector3(2.5, 0.25, 2.7)
-  let sphere3 = sphere.clone("sphere1");
+  let sphere3 = sphere.clone("sphere3");
   sphere3.scaling = new Vector3(0.5, 0.5, 0.5)
   sphere3.position = new Vector3(3, 0.25, 2)
   return sphere;
@@ -132,6 +148,7 @@ function createSphere(scene: Scene) {
       light?: Light;
       sphere?: Mesh;
       ground?: Mesh;
+      sky?:Mesh;
       camera?: Camera;
     }
   
@@ -142,6 +159,7 @@ function createSphere(scene: Scene) {
     that.sphere = createSphere(that.scene);
     that.light = createLight(that.scene);
     that.ground = createGround(that.scene);
+    that.sky = createSky(that.scene);
     that.camera = createArcRotateCamera(that.scene);
     return that;
   }

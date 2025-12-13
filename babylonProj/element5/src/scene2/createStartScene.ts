@@ -3,6 +3,7 @@
 import {
     Scene,
     ArcRotateCamera,
+    Vector2,
     Vector3,
     HemisphericLight,
     MeshBuilder,
@@ -12,27 +13,28 @@ import {
     Engine,
     StandardMaterial,
     Texture,
-    Color3
+    Color3,
+    CubeTexture,
+    SceneLoader,
+    AbstractMesh
   } from "@babylonjs/core";
+import { WaterMaterial } from "@babylonjs/materials/water";
   
-  
-  function createCylinder(scene: Scene) {
-    let cylinder = MeshBuilder.CreateCylinder(
-      "cylinder",
-      { height: 1, diameter: 0.7 },
-      scene
-    );
-    cylinder.position.x = 1;
-    cylinder.position.y = 1;
-    cylinder.position.z = 1;
-  
-    var texture = new StandardMaterial("reflective", scene);
-    texture.ambientTexture = new Texture("./assets/textures/wood.jpg", scene);
-    texture.diffuseColor = new Color3(1, 1, 1);
-    cylinder.material = texture;
-    return cylinder;
-  }
-
+  function createSky(scene: Scene) {
+      const skybox = MeshBuilder.CreateBox("skyBox", { size: 1000 }, scene);
+      const skyboxMaterial = new StandardMaterial("skyBox", scene);
+      skyboxMaterial.backFaceCulling = false;
+      skyboxMaterial.reflectionTexture = new CubeTexture(
+        "./assets/textures/skybox/skybox",
+        scene
+      );
+      skyboxMaterial.reflectionTexture.coordinatesMode =
+        Texture.SKYBOX_MODE;
+      skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
+      skyboxMaterial.specularColor = new Color3(0, 0, 0);
+      skybox.material = skyboxMaterial;
+      return skybox;
+    }
   
   function createLight(scene: Scene) {
     const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
@@ -40,32 +42,45 @@ import {
     return light;
   }
   
-  function createSphere(scene: Scene) {
-    let sphere = MeshBuilder.CreateSphere(
-      "sphere",
-      { diameter: 2, segments: 32 },
-      scene,
-    );
-    sphere.position.y = 1;
-    var texture = new StandardMaterial("reflective", scene);
-  texture.ambientTexture = new Texture("./assets/textures/wood.jpg", scene);
-  texture.diffuseColor = new Color3(1, 1, 1);
-  sphere.material = texture;
-    return sphere;
-  }
+  async function importMeshA(scene: Scene, x: number, y: number): 
+  Promise<AbstractMesh> {
+  const result = await SceneLoader.ImportMeshAsync(
+    "",
+    "./assets/mesh/",
+    "skull.babylon",
+    scene
+  );
+
+  const skull = result.meshes[0];
+  skull.position.set(0, 12, 0);
+  skull.rotation.y = 1.5;
+
+  return skull;
+}
   
-  function createGround(scene: Scene) {
-    let ground = MeshBuilder.CreateGround(
-      "ground",
-      { width: 6, height: 6 },
-      scene,
-    );
-    var texture = new StandardMaterial("reflective", scene);
-    texture.ambientTexture = new Texture("./assets/textures/floor.jpg", scene);
-    texture.diffuseColor = new Color3(1, 1, 1);
-    ground.material = texture;
-    return ground;
-  }
+ function createWater(scene: Scene, skybox: Mesh): Mesh {
+  const waterMesh = MeshBuilder.CreateGround(
+    "waterMesh",
+    { width: 2048, height: 2048, subdivisions: 16 },
+    scene
+  );
+
+  const water = new WaterMaterial("water", scene, new Vector2(512, 512));
+
+  water.bumpTexture = new Texture("./assets/textures/waterbump.png", scene);
+  water.windForce = -10;
+  water.waveHeight = 1.7;
+  water.bumpHeight = 0.1;
+  water.windDirection = new Vector2(1, 1);
+  water.waterColor = new Color3(0, 0, 221 / 255);
+  water.colorBlendFactor = 0.0;
+
+  // Reflect sky immediately
+  water.addToRenderList(skybox);
+
+  waterMesh.material = water;
+  return waterMesh;
+}
   
   function createArcRotateCamera(scene: Scene) {
     let camAlpha = -Math.PI / 2,
@@ -87,20 +102,37 @@ import {
   export default function createStartScene(engine: Engine) {
     interface SceneData {
       scene: Scene;
-      cylinder?: Mesh;
       light?: Light;
-      sphere?: Mesh;
+      skull?: AbstractMesh;
       ground?: Mesh;
+      water?: Mesh;
+      sky?: Mesh;
       camera?: Camera;
     }
   
     let that: SceneData = { scene: new Scene(engine) };
-    // that.scene.debugLayer.show();
-  
-    that.cylinder = createCylinder(that.scene);
-    that.light = createLight(that.scene);
-    that.sphere = createSphere(that.scene);
-    that.ground = createGround(that.scene);
-    that.camera = createArcRotateCamera(that.scene);
-    return that;
-  }
+
+  that.sky = createSky(that.scene);
+  that.light = createLight(that.scene);
+  that.water = createWater(that.scene, that.sky);
+  that.camera = createArcRotateCamera(that.scene);
+
+  importMeshA(that.scene, 0, 0).then(skull => {
+    that.skull = skull;
+
+    //water reflections for skull
+    const waterMat = that.water?.material as WaterMaterial;
+    waterMat?.addToRenderList(skull);
+
+    //skull movement
+    let t = 0;
+    that.scene.registerBeforeRender(function () {
+        t += 0.01;
+        skull.rotation.x += 0.01*Math.sin(t);
+        skull.rotation.y += 0.01*Math.sin(t);
+        skull.rotation.z += 0.01*Math.sin(t);
+    });
+  });
+
+  return that;
+}
